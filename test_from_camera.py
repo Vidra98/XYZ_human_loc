@@ -137,14 +137,14 @@ def main(args=None):
     args.checkpoint='mobilenetv2'
     args.shift_scale=True
     args.model_weigth='dpt_hybrid' # Midas model dpt_hybrid, midas_v21_large or midas_v21_small'
-    # Set true for real time plot and false for single plot a time
-    args.plot_pointcloud=False
-    args.project_pointcloud_torso_frame=False
+    args.plot_pointcloud=True
+    args.project_pointcloud_torso_frame=True
+    args.project_in_3D=True
     args.plot_real_time=True
 
-    args.plot_skeleton=True
-    # Set true to use camera info as ground truth
-    args.GT_from_camera=True
+    args.plot_skeleton=False
+    args.GT_from_camera=False
+
     #Ensure that cuda cache is not used for nothing
     torch.cuda.empty_cache()
     Predictor.loader_workers = 1
@@ -177,11 +177,7 @@ def main(args=None):
         ret, depth_plt, color_plt = dc.get_frame()
 
         color_plt[:,:,[0,1,2]]=color_plt[:,:,[2,1,0]]
-        # fig, ax = plt.subplots()
-        # im = ax.imshow(depth_plt, cmap='gray')
-        # fig2, ax2 = plt.subplots()
-        # im2 = ax2.imshow(color_plt)
-        # plt.show()
+
         start_open = time.perf_counter()
         
         image, processed_image, anns, meta = capture.preprocessing(torch.tensor(color_plt))
@@ -208,8 +204,6 @@ def main(args=None):
         start_depthmap = time.perf_counter()
         if args.GT_from_camera is False:
             depth_map, disparity, _=depth_mapping(depth_model,transform,color_plt,args)
-            fig3, ax3 = plt.subplots()
-            im3 = ax3.imshow(depth_map,cmap='gray')
         elif args.GT_from_camera :
             depth_map=depth_plt/1000
         
@@ -259,8 +253,6 @@ def main(args=None):
                         continue
                     color_plt=cv2.line(color_plt,people_kp[pair[1]][[1,0]], people_kp[pair[0]][[1,0]], (255,0,0),3)     
                 color_idx+=1
-
-              
         
         #These are the intrisic of the camera (in pxl), they can be obtain on the P array of the camera info topics
         #http://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/CameraInfo.html
@@ -268,9 +260,7 @@ def main(args=None):
         fy=909.0
         cx=653.7
         cy=367.6
-        s=0
-        #color_plt=cv2.circle(color_plt,tuple([int(cx),int(cy)]), 10, (0,255,0),-1) 
-        
+        s=0        
 
         #For each person we predict the depth
         depth_pred=np.zeros((len(preds_indice),17))
@@ -292,13 +282,8 @@ def main(args=None):
         depth_pred[keypoint_confidence<=0.4]=np.nan
         cartesian_pred[cartesian_pred==0.]=np.nan
 
+        #We want to compute body orientation in the body reference frame 
         if len(pred)>0:
-            # print('shoulder shoulder dist',np.sqrt((cartesian_pred[0,0,left_shoulder]-cartesian_pred[0,0,right_shoulder])**2+(cartesian_pred[0,1,left_shoulder]-cartesian_pred[0,1,right_shoulder])**2))
-            # print('hips hips dist',np.sqrt((cartesian_pred[0,0,left_hip]-cartesian_pred[0,0,right_hip])**2+(cartesian_pred[0,1,left_hip]-cartesian_pred[0,1,right_hip])**2))
-            # print('left shoulder hips dist',np.sqrt((cartesian_pred[0,0,left_shoulder]-cartesian_pred[0,0,left_hip])**2+(cartesian_pred[0,1,left_shoulder]-cartesian_pred[0,1,left_hip])**2))
-            # print('right shoulder hips dist',np.sqrt((cartesian_pred[0,0,right_shoulder]-cartesian_pred[0,0,right_hip])**2+(cartesian_pred[0,1,right_shoulder]-cartesian_pred[0,1,right_hip])**2))
-
-            #We want to compute body orientation in the body reference frame
             Torso_coordinate=np.array([cartesian_pred[0,:,left_shoulder],cartesian_pred[0,:,right_shoulder],cartesian_pred[0,:,left_hip],cartesian_pred[0,:,right_hip]])
             Torso_coordinate=Torso_coordinate[~np.isnan(Torso_coordinate)]
             Torso_coordinate=np.reshape(Torso_coordinate,(int(len(Torso_coordinate)/3),3))
@@ -307,7 +292,7 @@ def main(args=None):
 
         start_rotation= time.perf_counter()
 
-        #We need at least three keypoint of the torso to do a projection on the torso frame
+        #We want at least four keypoint of the torso to do a projection on the torso frame
         if len(Torso_coordinate)<4:
             print('At least three point need to be located on the torso to project to the torso frame - Camera frame is used.')
             R=np.eye(3)
@@ -317,99 +302,64 @@ def main(args=None):
             #Center of the new frame
             Torso_centroid=np.mean(Torso_coordinate,0)
 
-            #3d approach doesn't work well yet
-            """Torso_centered_xyz=Torso_coordinate-Torso_centroid
+            #3d approach doesn't work well yet, the axis are good but axis direction isn't stable
+            if args.project_in_3D:
+                Torso_centered_xyz=Torso_coordinate-Torso_centroid
 
-            #We make sure that the left shoulder is always on the positive axis and that y axis goes in the direction from shoulder to hips
-            x, y, z =0,1,2
-            shoulder, hips=[0,1], [2,3]
-            left, right=[0,2], [1,3]
+                #We make sure that the left shoulder is always on the positive axis and that y axis goes in the direction from shoulder to hips
+                x, y, z =0,1,2
+                shoulder, hips=[0,1], [2,3]
+                left, right=[0,2], [1,3]
+                
+                print(len(Torso_centered_xyz))
+                Torso_variance_xyz=np.dot((Torso_centered_xyz).transpose(),(Torso_centered_xyz))/len(Torso_centered_xyz)
+                eigen_value_xyz,eigenvector_xyz=np.linalg.eig(Torso_variance_xyz)
+                #We sort from bigger to smaller value
+                sorting_xyz=np.argsort(-1*eigen_value_xyz)
+                #We  want to have the x vector on the shoulder (bigger eigenvalue, data are more spread along the shoulder axis )
+                eigenvector=eigenvector_xyz.transpose()[sorting_xyz].transpose()
+                new_coordinate_xyz=np.dot(eigenvector_xyz,Torso_centered_xyz.transpose())
 
-            print(len(Torso_centered_xyz))
-            Torso_variance_xyz=np.dot((Torso_centered_xyz).transpose(),(Torso_centered_xyz))/len(Torso_centered_xyz)
-            eigen_value_xyz,eigenvector_xyz=np.linalg.eig(Torso_variance_xyz)
+                R,T=rigid_transform_3D(np.array(Torso_coordinate.transpose()),new_coordinate_xyz)
 
-            new_coordinate_xyz=np.dot(eigenvector_xyz,Torso_centered_xyz.transpose())
+  
+            else: 
+                #We shearch the principal axis for the xz plan, we want to keep y pointb up in camera frame 
+                Torso_centered_xz=Torso_coordinate[:,[0,2]]-Torso_centroid[[0,2]]
+                Torso_centered_y=Torso_coordinate[:,1]-Torso_centroid[1]
+                #We make sure that the left shoulder is always on the positive axis and that y axis goes in the direction from shoulder to hips
+                x,z,=0,1
+                shoulder,hips=[0,1],[2,3]
+                left,right=[0,2],[1,3]
+                if np.mean(Torso_centered_xz[left,x])<np.mean(Torso_centered_xz [right,x]):
+                    Torso_centered_xz[left,x]=-Torso_centered_xz[left,x]
+                    Torso_centered_xz[right,x]=-Torso_centered_xz[right,x]
+                    print('left right alternated')
+                if np.mean(Torso_centered_xz[shoulder,z,])>np.mean(Torso_centered_xz[hips,z,]):
+                    Torso_centered_xz[shoulder,z,]=-Torso_centered_xz[shoulder,z,]
+                    Torso_centered_xz[hips,z,]=-Torso_centered_xz[hips,z,]
+                    print('shoulder hips alternated')
+                #print('torso coord',Torso_coordinate[:,[0,2]],'torso centroid',Torso_centroid[[0,2]])
+                Torso_variance_xz=np.dot((Torso_centered_xz).transpose(),(Torso_centered_xz))/len(Torso_centered_xz)
 
-            R,T=rigid_transform_3D(np.array(Torso_coordinate.transpose()),new_coordinate_xyz)"""
+                #The eigenvector of the covariance matrix, gives us the pricipals axis where we will maximize information. Meaning the axis align with the body 
+                eigen_value,eigenvector=np.linalg.eig(Torso_variance_xz)
+                #We sort from bigger to smaller value
+                sorting=np.argsort(-1*eigen_value)
+                #We  want to have the x vector on the shoulder (bigger eigenvalue, data are more spread along the shoulder axis )
+                eigenvector=eigenvector.transpose()[sorting].transpose()
+                #On X,Z it's the projection of the point on the new referentiel, on the Y axis we just invert the axis.
+                new_coordinate=np.dot(eigenvector,Torso_centered_xz.transpose())
 
-            #print('Rotation : \n',R,'\nTranslation : \n',T,'\neigenvector\n',eigenvector_xyz,'\neigenvalue\n',eigen_value_xyz)
-            #We  want to have the x vector on the shoulder (bigger eigenvalue, data are more spread along the shoulder axis )   
+                R,T=rigid_transform_3D(np.array(Torso_coordinate.transpose()[[0,2]]),new_coordinate)
 
-            #We shearch the principal axis for the xz plan, we want to keep y pointb up in camera frame 
-            Torso_centered_xz=Torso_coordinate[:,[0,2]]-Torso_centroid[[0,2]]
-            Torso_centered_y=Torso_coordinate[:,1]-Torso_centroid[1]
-            #We make sure that the left shoulder is always on the positive axis and that y axis goes in the direction from shoulder to hips
-            x,z,=0,1
-            shoulder,hips=[0,1],[2,3]
-            left,right=[0,2],[1,3]
-            if np.mean(Torso_centered_xz[left,x])<np.mean(Torso_centered_xz [right,x]):
-                Torso_centered_xz[left,x]=-Torso_centered_xz[left,x]
-                Torso_centered_xz[right,x]=-Torso_centered_xz[right,x]
-                print('left right alternated')
-            if np.mean(Torso_centered_xz[shoulder,z,])>np.mean(Torso_centered_xz[hips,z,]):
-                Torso_centered_xz[shoulder,z,]=-Torso_centered_xz[shoulder,z,]
-                Torso_centered_xz[hips,z,]=-Torso_centered_xz[hips,z,]
-                print('shoulder hips alternated')
-            #print('torso coord',Torso_coordinate[:,[0,2]],'torso centroid',Torso_centroid[[0,2]])
-            Torso_variance_xz=np.dot((Torso_centered_xz).transpose(),(Torso_centered_xz))/len(Torso_centered_xz)
-
-            #The eigenvector of the covariance matrix, gives us the pricipals axis where we will maximize information. Meaning the axis align with the body 
-            eigen_value,eigenvector=np.linalg.eig(Torso_variance_xz)
-            #We sort from bigger to smaller value
-            sorting=np.argsort(-1*eigen_value)
-            #We  want to have the x vector on the shoulder (bigger eigenvalue, data are more spread along the shoulder axis )
-            eigenvector=eigenvector.transpose()[sorting].transpose()
-            #On X,Z it's the projection of the point on the new referentiel, on the Y axis we just invert the axis.
-            new_coordinate=np.dot(eigenvector,Torso_centered_xz.transpose())
-
-            R,T=rigid_transform_3D(np.array(Torso_coordinate.transpose()[[0,2]]),new_coordinate)
-
-            R_tmp=np.zeros((3,3))
-            R_tmp[tuple([[0,0,2,2],[0,2,0,2]])]=np.reshape(eigenvector,(1,4))
-            R_tmp[1,1]=-1
-            R=R_tmp
-            T=np.array([[T.item(0)],[Torso_centroid[1]],[T.item(1)]])
-
-
-            # print('new_coordinate\n',new_coordinate)
-            # print('\n\nleft shoulder x,y :\n', new_coordinate[:,0])
-            # print('right shoulder x,y :\n', new_coordinate[:,1])
-            # print('left hip x,y :\n', new_coordinate[:,2])
-            # print('right hip x,y :\n', new_coordinate[:,3],'\n\n')
-            # print('Torso_centered_xz\n',Torso_centered_xz)
-
-            # print('cartesian_pred\n',cartesian_pred,'\n--------------------------')
-            # print('Torso_variance_xz\n\n',Torso_variance_xz,'\nlen torso coord\n\n',len(Torso_coordinate))
-            # print('eigen_value\n\n',eigen_value,'\neigenvector\n\n',eigenvector)
-            # print('new coord xzy - y pos\n\n', np.concatenate((np.dot(eigenvector,Torso_centered_xz.transpose()),np.array([(Torso_coordinate[:,1]-Torso_centroid[1])]) ),axis=0))
-            # print('new coord xzy\n', np.concatenate((np.dot(eigenvector,Torso_centered_xz.transpose()),np.array([-(Torso_coordinate[:,1]-Torso_centroid[1])]) ),axis=0))
-            #print('new_coordinate\n',new_coordinate)
-            # print(np.shape(Torso_coordinate),np.shape(new_coordinate))           
-            #print('Rotation : \n',R,'\n Translation : \n',T)
-            
-            # print('Projection\n',R@Torso_coordinate.transpose()+T)
-            # print('Projection referentiel\n',R@np.eye(3).transpose())
-
-            # print('Error :' ,(R@Torso_coordinate.transpose()+T)-(new_coordinate))
-            # print('cart_pred reproj',R@cartesian_pred+T)
-            
-            
-            # if np.mean(torso_projection[x,shoulder])<np.mean(torso_projection[x,hips]):
-            #     R[x,:]*=-1
-            #     T[x]*=-1
-            #     print('shoulder hips on x axis alternated')
-            # if np.mean(torso_projection[y,left])<np.mean(torso_projection[y,right]):
-            #     R[y,:]*=-1
-            #     T[y]*=-1
-            #     print('left right on y axis alternated')
-            # print('R\n',R,'\neigeinvalue\n',eigen_value_xyz,'\neigenvector_xyz\n',eigenvector_xyz)
-            # torso_projection=R@(Torso_coordinate.transpose())+T
-            # print('torso_projection\n',torso_projection)
-
+                R_tmp=np.zeros((3,3))
+                R_tmp[tuple([[0,0,2,2],[0,2,0,2]])]=np.reshape(eigenvector,(1,4))
+                R_tmp[1,1]=-1
+                R=R_tmp
+                T=np.array([[T.item(0)],[Torso_centroid[1]],[T.item(1)]])
 
             cartesian_pred=R.transpose()@(cartesian_pred)+T
-     
             
             #Plot of torso frame and camera frame
             # fig_torso_frame = plt.figure(figsize=(20.0, 10.0))
@@ -455,8 +405,6 @@ def main(args=None):
             # ax2.set_ylabel('Z [m]')
             # ax2.set_zlabel('Y [m]')
             # ax2.view_init(azim=145, elev=-140)
-            # plt.show()
-            # plt.savefig(f"Frame_fig/Torso_frame_{frame_index}.png")
 
              # # List to save your projections to
             # projections = []
@@ -497,11 +445,13 @@ def main(args=None):
             #up view
             #ax2.view_init(azim=88, elev=-2)
 
+            #Uncomment to plot
             #if args.plot_real_time:
                 #plt.draw()
                 #plt.pause(0.001)
             
-            
+            if os.path.isdir("Frame_fig") is False:
+                os.mkdir("Frame_fig")
             plt.savefig(f"Frame_fig/{frame_index}.png")
             plt.show()
             if args.plot_real_time:
@@ -514,67 +464,54 @@ def main(args=None):
             rgbd_image=o3d.geometry.RGBDImage.create_from_color_and_depth(color_img,depth_img,depth_scale=1000,depth_trunc=8,convert_rgb_to_intensity=False)
 
             pcd = o3d.geometry.PointCloud.create_from_rgbd_image(rgbd_image,o3d.camera.PinholeCameraIntrinsic(width,heigth,fx,fy,cx,cy))
-                            
+
+            mesh = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.6)#.scale(0.4, center=(0, 0, 0))
+       
             if args.project_pointcloud_torso_frame is False :
                 # flip it, otherwise the pointcloud will be upside down
                 pcd.transform([[-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]])
 
+            if args.project_pointcloud_torso_frame:
+                        mesh.rotate(R,center=(0, 0, 0))
+                        mesh.translate(Torso_centroid,relative=True)
+            
+            
 
-            if args.plot_real_time==False:
-                #o3d.visualization.draw_geometries([rgbd_image])
-                mesh = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.6)#.scale(0.4, center=(0, 0, 0))
+            if args.plot_real_time==True:
 
-                
                 #Visualize Point Cloud
                 vis.add_geometry(mesh)
                 vis.add_geometry(pcd)
+
                 #view control
                 ctr = vis.get_view_control()
-                #Viewpoint in torso frame
-                if args.project_pointcloud_torso_frame:
+                #Viewpoint in up view to show pointcloud
+                if args.project_in_3D is False:
                     #From neural networks
-                    # ctr.set_front(np.array( [0.5322687991822731, -0.12341988666161863, -0.83753057078144577] ) )
-                    # ctr.set_lookat(np.array( [ -1.8111004207019175, 0.82685655683616077, 1.7260878402305799 ]) )
-                    # ctr.set_up(np.array( [ 0.030590938857055654, 0.99147386266430093, -0.12666402059533283 ]) )
-                    # ctr.set_zoom(0.619)
-
                     ctr.set_front([0.48397772265932698, 0.12982095147818667, -0.86539706755153145])
                     ctr.set_lookat([ -1.7501399058158631, -0.51045015102172453, 3.3384999942779543])
                     ctr.set_up([ -0.018336707055478629, -0.98721279496109449, -0.15834981098651696  ])
                     ctr.set_zoom(0.3)
-
-                    if args.project_pointcloud_torso_frame:
-                        mesh.rotate(R,center=(0, 0, 0))
-                        mesh.translate(Torso_centroid,relative=True)
-                    # ctr.set_front(np.array( [-0.98968588642431865, -0.12829040962206251, -0.063744937144168651] ) )
-                    # ctr.set_lookat(np.array( [0.76388329296391633, 0.64673637370853398, 0.57562247451868942]) )
-                    # ctr.set_up(np.array( [ -0.12710706045686668, 0.99163825741717204, -0.022301605517290313 ]) )
-                    # ctr.set_zoom(0.49999999999999978)
-                # viewpoint in camera frame
+                # frontview
                 else:
-                    ctr.set_front([-0.23210059274685624, 0.044402826702813564, 0.97167777777787945])
-                    ctr.set_lookat([ 1.7687440243258228, 0.77902163585813933, -2.292000102996826 ])
-                    ctr.set_up([  0.016681922319671701, 0.99899230957010909, -0.041666279981538441  ])
-                    ctr.set_zoom(0.3)
-
-                
+                    ctr.set_front([0.45848994736002729, 0.24622214763580716, -0.85390961007791111])
+                    ctr.set_lookat([ -2.2084845183863813, -1.4031000175042272, 4.3881614332107697])
+                    ctr.set_up([ -0.028889198512434745, -0.95621576255347973, -0.29123329077146481 ])
+                    ctr.set_zoom(0.45)
                 # Updates
                 vis.update_geometry(pcd)
                 vis.update_geometry(mesh)
                 vis.poll_events()
                 vis.update_renderer()
-                #vis.run()
                 # Capture image
                 vis.capture_screen_image("Frame_fig/{}.png".format(frame_index))
-                #image = vis.capture_screen_float_buffer()
                 # Remove previous geometry
                 vis.remove_geometry(pcd)
                 vis.remove_geometry(mesh)
-
-                print('plotted')
-                # #mesh_RT = o3d.geometry.TriangleMesh.create_coordinate_frame().rotate((R), center=(1,1,1))
-                # #mesh_RT.translate(-T, relative=True)#, center=(T[0],T[1],T[2]))
-                #o3d.visualization.draw_geometries([mesh,pcd])
+            else:
+                
+                o3d.visualization.draw_geometries([rgbd_image])
+                o3d.visualization.draw_geometries([mesh,pcd])
 
         frame_index+=1
         end_plot= time.perf_counter()
@@ -622,59 +559,6 @@ _DATATYPES[PointField.UINT32]  = ('I', 4)
 _DATATYPES[PointField.FLOAT32] = ('f', 4)
 _DATATYPES[PointField.FLOAT64] = ('d', 8)
 
-def create_cloud(header, fields, points):
-    """
-    Create a L{sensor_msgs.msg.PointCloud2} message.
-    @param header: The point cloud header.
-    @type  header: L{std_msgs.msg.Header}
-    @param fields: The point cloud fields.
-    @type  fields: iterable of L{sensor_msgs.msg.PointField}
-    @param points: The point cloud points.
-    @type  points: list of iterables, i.e. one iterable for each point, with the
-                   elements of each iterable being the values of the fields for 
-                   that point (in the same order as the fields parameter)
-    @return: The point cloud.
-    @rtype:  L{sensor_msgs.msg.PointCloud2}
-    """
-
-    cloud_struct = struct.Struct(_get_struct_fmt(False, fields))
-
-    buff = ctypes.create_string_buffer(cloud_struct.size * len(points))
-
-    point_step, pack_into = cloud_struct.size, cloud_struct.pack_into
-    offset = 0
-    for p in points:
-
-        pack_into(buff, offset, *p)
-        offset += point_step
-    #print('cloud_struct.size',cloud_struct.size)
-    #print('width',len(points))
-    return PointCloud2(header=header,
-                       height=1,
-                       width=len(points),
-                       is_dense=False,
-                       is_bigendian=False,
-                       fields=fields,
-                       point_step=cloud_struct.size,
-                       row_step=cloud_struct.size * len(points),
-                       data=buff.raw)
-
-def _get_struct_fmt(is_bigendian, fields, field_names=None):
-    fmt = '>' if is_bigendian else '<'
-
-    offset = 0
-    for field in (f for f in sorted(fields, key=lambda f: f.offset) if field_names is None or f.name in field_names):
-        if offset < field.offset:
-            fmt += 'x' * (field.offset - offset)
-            offset = field.offset
-        if field.datatype not in _DATATYPES:
-            print('Skipping unknown PointField datatype [%d]' % field.datatype, file=sys.stderr)
-        else:
-            datatype_fmt, datatype_length = _DATATYPES[field.datatype]
-            fmt    += field.count * datatype_fmt
-            offset += field.count * datatype_length
-
-    return fmt
 
 def rigid_transform_3D(A, B):
     """
@@ -771,6 +655,16 @@ def cli():  # pylint: disable=too-many-statements,too-many-branches
                         help='depth map ground truth')
     parser.add_argument('--shift-scale', default=True,
                         help='Use ground truth to fit depth scaling and shift')
+    parser.add_argument('--plot-pointcloud', default=False, action='store_true',
+                        help='Plot a pointcloud in real time')
+    parser.add_argument('--project-pointcloud-torso-frame', default=False, action='store_true',
+                        help='Project the pointcloud in the torso frame')
+    parser.add_argument('--plot-real-time', default=False, action='store_true',
+                        help='Plot in real time')
+    parser.add_argument('--plot-skeleton', default=False, action='store_true',
+                        help='Plot the skeleton in xyz coordinate')
+    parser.add_argument('--GT-from-camera', default=False, action='store_true',
+                        help='Get the ground truth from the camera')
     
     args = parser.parse_args()
 
@@ -827,7 +721,6 @@ def get_depth_model(args):
     if args.depth_model=='mannequin':
         opt = TrainOptions().parse()  # set CUDA_VISIBLE_DEVICES before import torch
 
-        eval_num_threads = 2
         model = pix2pix_model.Pix2PixModel(opt)
         torch.backends.cudnn.enabled = True
         torch.backends.cudnn.benchmark = True
@@ -877,7 +770,6 @@ def get_depth_model(args):
                 mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
             )
         else:
-            #print(f"args.model_type '{args.model_type}' not implemented, use: --args.model_type large")
             assert False
         
         transform = Compose(
@@ -897,12 +789,7 @@ def get_depth_model(args):
         )
 
         model.eval()
-        
         if args.optimize==True:
-            # rand_example = torch.rand(1, 3, net_h, net_w)
-            # model(rand_example)
-            # traced_script_module = torch.jit.trace(model, rand_example)
-            # model = traced_script_module
         
             if device == torch.device("cuda"):
                 model = model.to(memory_format=torch.channels_last)  
@@ -915,7 +802,6 @@ def get_depth_model(args):
 
 def depth_mapping(model,transformation,frame,args):
     input_height,input_width,_=np.shape(frame)   
-
     
     if args.depth_model=='mannequin':
 
@@ -953,9 +839,6 @@ def depth_mapping(model,transformation,frame,args):
         pred_d=pred_d.detach().numpy()
         pred_d = cv2.resize(pred_d, (input_width,input_height))
         disparity = cv2.resize(disparity, (input_width,input_height))
-        # fig, ax = plt.subplots()
-        # im = ax.imshow(disparity, cmap='gray', vmin=0, vmax=255)
-        # plt.show()
 
     elif args.depth_model=='midas':
         # input
@@ -963,12 +846,8 @@ def depth_mapping(model,transformation,frame,args):
         if frame.ndim == 2:
             print('frame.ndim == 2')
             frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
-        
 
         frame = frame / 255.0
-        # fig, ax = plt.subplots()
-        # im = ax.imshow(frame)
-        # plt.show()
 
         img_input = transformation({"image": frame})["image"]
         # compute
@@ -990,14 +869,12 @@ def depth_mapping(model,transformation,frame,args):
                 .numpy().astype(np.float32)
             )
         end=time.time()
-        depth_max=np.max(disparity)
-        depth_min=np.min(disparity)
 
         disparity[disparity<0.001]=0.001
         pred_d = 1. / disparity
 
         disparity = disparity / np.max(disparity)
-        #print(disparity)
+
         disparity = np.tile(np.expand_dims(disparity, axis=-1), (1, 1, 3))
 
         disparity = (disparity*255).astype(np.uint8)
