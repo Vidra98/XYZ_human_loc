@@ -1,0 +1,42 @@
+/data/drame/VENV_open/lib/python3.8/site-packages/setuptools_scm/integration.py:16: RuntimeWarning: 
+ERROR: setuptools==44.0.0 is used in combination with setuptools_scm>=6.x
+
+Your build configuration is incomplete and previously worked by accident!
+
+
+This happens as setuptools is unable to replace itself when a activated build dependency
+requires a more recent setuptools version
+(it does not respect "setuptools>X" in setup_requires).
+
+
+setuptools>=31 is required for setup.cfg metadata support
+setuptools>=42 is required for pyproject.toml configuration support
+
+Suggested workarounds if applicable:
+ - preinstalling build dependencies like setuptools_scm before running setup.py
+ - installing setuptools_scm using the system package manager to ensure consistency
+ - migrating from the deprecated setup_requires mechanism to pep517/518
+   and using a pyproject.toml to declare build dependencies
+   which are reliably pre-installed before running the build tools
+
+  warnings.warn(
+running egg_info
+writing ../../build/depth_subscriber/depth_subscriber.egg-info/PKG-INFO
+writing dependency_links to ../../build/depth_subscriber/depth_subscriber.egg-info/dependency_links.txt
+writing entry points to ../../build/depth_subscriber/depth_subscriber.egg-info/entry_points.txt
+writing requirements to ../../build/depth_subscriber/depth_subscriber.egg-info/requires.txt
+writing top-level names to ../../build/depth_subscriber/depth_subscriber.egg-info/top_level.txt
+listing git files failed - pretending there aren't any
+reading manifest file '../../build/depth_subscriber/depth_subscriber.egg-info/SOURCES.txt'
+writing manifest file '../../build/depth_subscriber/depth_subscriber.egg-info/SOURCES.txt'
+running build
+running build_py
+running install
+running install_lib
+running install_data
+running install_egg_info
+removing '/data/drame/openpifpaf1.3/openpifpaf/install/depth_subscriber/lib/python3.8/site-packages/depth_subscriber-0.0.0-py3.8.egg-info' (and everything under it)
+Copying ../../build/depth_subscriber/depth_subscriber.egg-info to /data/drame/openpifpaf1.3/openpifpaf/install/depth_subscriber/lib/python3.8/site-packages/depth_subscriber-0.0.0-py3.8.egg-info
+running install_scripts
+Installing listener script to /data/drame/openpifpaf1.3/openpifpaf/install/depth_subscriber/lib/depth_subscriber
+writing list of installed files to '/data/drame/openpifpaf1.3/openpifpaf/build/depth_subscriber/install.log'

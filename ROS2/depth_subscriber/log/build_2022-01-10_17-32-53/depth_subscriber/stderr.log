@@ -1,0 +1,7 @@
+/data/drame/VENV_open/lib/python3.8/site-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+  File "/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber/lib/python3.8/site-packages/depth_subscriber/D430i_subscriber.py", line 471
+    [[0,2]]://answers.ros.org/question/357944/why-is-point_cloud2py-missing-from-sensor_msgs-in-ros2/
+            ^
+SyntaxError: invalid syntax
+

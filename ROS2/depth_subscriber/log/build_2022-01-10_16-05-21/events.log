@@ -1,0 +1,132 @@
+[0.000000] (-) TimerEvent: {}
+[0.000391] (depth_subscriber) JobQueued: {'identifier': 'depth_subscriber', 'dependencies': OrderedDict()}
+[0.001043] (depth_subscriber) JobStarted: {'identifier': 'depth_subscriber'}
+[0.100110] (-) TimerEvent: {}
+[0.200436] (-) TimerEvent: {}
+[0.256959] (depth_subscriber) Command: {'cmd': ['/usr/bin/python3', 'setup.py', 'egg_info', '--egg-base', 'build/depth_subscriber', 'build', '--build-base', '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/build/depth_subscriber/build', 'install', '--prefix', '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber', '--record', '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/build/depth_subscriber/install.log', '--single-version-externally-managed'], 'cwd': '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'LANGUAGE': 'en_US:en', 'USER': 'drame', 'SSH_AGENT_PID': '2435', 'XDG_SESSION_TYPE': 'x11', 'XDG_CACHE_HOME': '/data/drame/.local', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib', 'HOME': '/home/drame', 'OLDPWD': '/data/drame/openpifpaf1.3/openpifpaf', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'PS1': '(VENV_open) \\[\\e]0;\\u@\\h: \\w\\a\\]${debian_chroot:+($debian_chroot)}\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$', 'MANAGERPID': '2251', 'DBUS_STARTER_BUS_TYPE': 'session', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/171624/bus,guid=ea03791afbdde8fcbb3d036161a3c0de', 'COLORTERM': 'truecolor', 'MANDATORY_PATH': '/usr/share/gconf/ubuntu.mandatory.path', 'IM_CONFIG_PHASE': '1', 'COLCON_PREFIX_PATH': '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install', 'ROS_DISTRO': 'foxy', 'LOGNAME': 'drame', 'JOURNAL_STREAM': '9:30508', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'DEFAULTS_PATH': '/usr/share/gconf/ubuntu.default.path', 'USERNAME': 'drame', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'WINDOWPATH': '2', 'PATH': '/data/drame/VENV_open/bin:/opt/ros/foxy/bin:/home/drame/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'SESSION_MANAGER': 'local/biorobpclab3:@/tmp/.ICE-unix/2470,unix/biorobpclab3:/tmp/.ICE-unix/2470', 'INVOCATION_ID': '80c9e6b39bb343d29051091d0078fba2', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/3f97fd06_4d81_4fcc_9799_554832a31ea9', 'XDG_RUNTIME_DIR': '/run/user/171624', 'DISPLAY': ':1', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/171624/gdm/Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'PLATFORMIO_CORE_DIR': '/data/drame/.platformio', 'GNOME_TERMINAL_SERVICE': ':1.185', 'SSH_AUTH_SOCK': '/run/user/171624/keyring/ssh', 'AMENT_PREFIX_PATH': '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber:/opt/ros/foxy', 'SHELL': '/bin/bash', 'MOZ_ALLOW_DOWNGRADE': '1', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GPG_AGENT_INFO': '/run/user/171624/gnupg/S.gpg-agent:0:1', 'VIRTUAL_ENV': '/data/drame/VENV_open', 'QT_IM_MODULE': 'ibus', 'PWD': '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/build/depth_subscriber', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/171624/bus,guid=ea03791afbdde8fcbb3d036161a3c0de', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/', 'PYTHONPATH': '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber/lib/python3.8/site-packages:/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages:/data/drame/VENV_open/lib/python3.8/site-packages:/data/drame/openpifpaf1.3/openpifpaf', 'COLCON': '1', 'VTE_VERSION': '6003'}, 'shell': False}
+[0.300561] (-) TimerEvent: {}
+[0.400870] (-) TimerEvent: {}
+[0.487815] (depth_subscriber) StdoutLine: {'line': b'running egg_info\n'}
+[0.488263] (depth_subscriber) StdoutLine: {'line': b'writing build/depth_subscriber/depth_subscriber.egg-info/PKG-INFO\n'}
+[0.488409] (depth_subscriber) StdoutLine: {'line': b'writing dependency_links to build/depth_subscriber/depth_subscriber.egg-info/dependency_links.txt\n'}
+[0.488558] (depth_subscriber) StdoutLine: {'line': b'writing entry points to build/depth_subscriber/depth_subscriber.egg-info/entry_points.txt\n'}
+[0.488710] (depth_subscriber) StdoutLine: {'line': b'writing requirements to build/depth_subscriber/depth_subscriber.egg-info/requires.txt\n'}
+[0.488852] (depth_subscriber) StdoutLine: {'line': b'writing top-level names to build/depth_subscriber/depth_subscriber.egg-info/top_level.txt\n'}
+[0.500934] (-) TimerEvent: {}
+[0.601160] (-) TimerEvent: {}
+[0.701390] (-) TimerEvent: {}
+[0.801603] (-) TimerEvent: {}
+[0.901849] (-) TimerEvent: {}
+[1.002095] (-) TimerEvent: {}
+[1.102378] (-) TimerEvent: {}
+[1.202584] (-) TimerEvent: {}
+[1.302809] (-) TimerEvent: {}
+[1.403013] (-) TimerEvent: {}
+[1.503272] (-) TimerEvent: {}
+[1.603500] (-) TimerEvent: {}
+[1.703732] (-) TimerEvent: {}
+[1.803958] (-) TimerEvent: {}
+[1.904184] (-) TimerEvent: {}
+[2.004411] (-) TimerEvent: {}
+[2.104640] (-) TimerEvent: {}
+[2.204885] (-) TimerEvent: {}
+[2.305119] (-) TimerEvent: {}
+[2.405368] (-) TimerEvent: {}
+[2.505619] (-) TimerEvent: {}
+[2.605855] (-) TimerEvent: {}
+[2.706083] (-) TimerEvent: {}
+[2.806319] (-) TimerEvent: {}
+[2.906550] (-) TimerEvent: {}
+[3.006786] (-) TimerEvent: {}
+[3.107017] (-) TimerEvent: {}
+[3.207250] (-) TimerEvent: {}
+[3.307485] (-) TimerEvent: {}
+[3.407723] (-) TimerEvent: {}
+[3.507952] (-) TimerEvent: {}
+[3.608182] (-) TimerEvent: {}
+[3.708379] (-) TimerEvent: {}
+[3.808636] (-) TimerEvent: {}
+[3.908870] (-) TimerEvent: {}
+[4.009100] (-) TimerEvent: {}
+[4.109343] (-) TimerEvent: {}
+[4.209592] (-) TimerEvent: {}
+[4.309830] (-) TimerEvent: {}
+[4.410073] (-) TimerEvent: {}
+[4.510317] (-) TimerEvent: {}
+[4.610563] (-) TimerEvent: {}
+[4.710804] (-) TimerEvent: {}
+[4.811057] (-) TimerEvent: {}
+[4.911346] (-) TimerEvent: {}
+[5.011624] (-) TimerEvent: {}
+[5.111891] (-) TimerEvent: {}
+[5.212141] (-) TimerEvent: {}
+[5.312417] (-) TimerEvent: {}
+[5.412702] (-) TimerEvent: {}
+[5.512950] (-) TimerEvent: {}
+[5.613219] (-) TimerEvent: {}
+[5.713470] (-) TimerEvent: {}
+[5.813685] (-) TimerEvent: {}
+[5.913930] (-) TimerEvent: {}
+[6.014182] (-) TimerEvent: {}
+[6.114437] (-) TimerEvent: {}
+[6.214708] (-) TimerEvent: {}
+[6.314972] (-) TimerEvent: {}
+[6.415198] (-) TimerEvent: {}
+[6.515443] (-) TimerEvent: {}
+[6.615691] (-) TimerEvent: {}
+[6.715937] (-) TimerEvent: {}
+[6.816185] (-) TimerEvent: {}
+[6.916434] (-) TimerEvent: {}
+[7.016681] (-) TimerEvent: {}
+[7.116928] (-) TimerEvent: {}
+[7.217208] (-) TimerEvent: {}
+[7.317456] (-) TimerEvent: {}
+[7.417710] (-) TimerEvent: {}
+[7.517973] (-) TimerEvent: {}
+[7.618242] (-) TimerEvent: {}
+[7.718512] (-) TimerEvent: {}
+[7.818767] (-) TimerEvent: {}
+[7.919024] (-) TimerEvent: {}
+[8.019284] (-) TimerEvent: {}
+[8.119539] (-) TimerEvent: {}
+[8.219804] (-) TimerEvent: {}
+[8.320058] (-) TimerEvent: {}
+[8.420313] (-) TimerEvent: {}
+[8.520569] (-) TimerEvent: {}
+[8.620823] (-) TimerEvent: {}
+[8.721075] (-) TimerEvent: {}
+[8.821341] (-) TimerEvent: {}
+[8.921573] (-) TimerEvent: {}
+[9.021813] (-) TimerEvent: {}
+[9.122072] (-) TimerEvent: {}
+[9.222324] (-) TimerEvent: {}
+[9.322569] (-) TimerEvent: {}
+[9.422789] (-) TimerEvent: {}
+[9.523036] (-) TimerEvent: {}
+[9.623281] (-) TimerEvent: {}
+[9.723528] (-) TimerEvent: {}
+[9.823772] (-) TimerEvent: {}
+[9.924021] (-) TimerEvent: {}
+[10.024268] (-) TimerEvent: {}
+[10.124506] (-) TimerEvent: {}
+[10.224759] (-) TimerEvent: {}
+[10.271024] (depth_subscriber) StdoutLine: {'line': b"writing manifest file 'build/depth_subscriber/depth_subscriber.egg-info/SOURCES.txt'\n"}
+[10.271262] (depth_subscriber) StdoutLine: {'line': b'running build\n'}
+[10.271339] (depth_subscriber) StdoutLine: {'line': b'running build_py\n'}
+[10.271394] (depth_subscriber) StdoutLine: {'line': b'copying depth_subscriber/D430i_subscriber.py -> /data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/build/depth_subscriber/build/lib/depth_subscriber\n'}
+[10.271540] (depth_subscriber) StdoutLine: {'line': b'running install\n'}
+[10.271688] (depth_subscriber) StderrLine: {'line': b'/data/drame/VENV_open/lib/python3.8/site-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.\n'}
+[10.271785] (depth_subscriber) StderrLine: {'line': b'  warnings.warn(\n'}
+[10.272200] (depth_subscriber) StdoutLine: {'line': b'running install_lib\n'}
+[10.272837] (depth_subscriber) StdoutLine: {'line': b'copying /data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/build/depth_subscriber/build/lib/depth_subscriber/D430i_subscriber.py -> /data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber/lib/python3.8/site-packages/depth_subscriber\n'}
+[10.273197] (depth_subscriber) StdoutLine: {'line': b'byte-compiling /data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber/lib/python3.8/site-packages/depth_subscriber/D430i_subscriber.py to D430i_subscriber.cpython-38.pyc\n'}
+[10.276993] (depth_subscriber) StdoutLine: {'line': b'running install_data\n'}
+[10.277362] (depth_subscriber) StdoutLine: {'line': b'running install_egg_info\n'}
+[10.277862] (depth_subscriber) StdoutLine: {'line': b"removing '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber/lib/python3.8/site-packages/depth_subscriber-0.0.0-py3.8.egg-info' (and everything under it)\n"}
+[10.278027] (depth_subscriber) StdoutLine: {'line': b'Copying build/depth_subscriber/depth_subscriber.egg-info to /data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber/lib/python3.8/site-packages/depth_subscriber-0.0.0-py3.8.egg-info\n'}
+[10.278570] (depth_subscriber) StdoutLine: {'line': b'running install_scripts\n'}
+[10.291094] (depth_subscriber) StdoutLine: {'line': b'Installing listener script to /data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber/lib/depth_subscriber\n'}
+[10.291332] (depth_subscriber) StdoutLine: {'line': b"writing list of installed files to '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/build/depth_subscriber/install.log'\n"}
+[10.306019] (depth_subscriber) CommandEnded: {'returncode': 0}
+[10.314912] (depth_subscriber) JobEnded: {'identifier': 'depth_subscriber', 'rc': 0}
+[10.315490] (-) EventReactorShutdown: {}

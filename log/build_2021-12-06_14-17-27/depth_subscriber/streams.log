@@ -1,0 +1,44 @@
+[0.247s] Invoking command in '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber': PS1=(VENV_open) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/data/drame/openpifpaf1.3/openpifpaf/install/depth_subscriber/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/depth_subscriber build --build-base /data/drame/openpifpaf1.3/openpifpaf/build/depth_subscriber/build install --prefix /data/drame/openpifpaf1.3/openpifpaf/install/depth_subscriber --record /data/drame/openpifpaf1.3/openpifpaf/build/depth_subscriber/install.log --single-version-externally-managed
+[0.479s] /data/drame/VENV_open/lib/python3.8/site-packages/setuptools_scm/integration.py:16: RuntimeWarning: 
+[0.479s] ERROR: setuptools==44.0.0 is used in combination with setuptools_scm>=6.x
+[0.479s] 
+[0.479s] Your build configuration is incomplete and previously worked by accident!
+[0.479s] 
+[0.479s] 
+[0.479s] This happens as setuptools is unable to replace itself when a activated build dependency
+[0.479s] requires a more recent setuptools version
+[0.479s] (it does not respect "setuptools>X" in setup_requires).
+[0.479s] 
+[0.479s] 
+[0.479s] setuptools>=31 is required for setup.cfg metadata support
+[0.479s] setuptools>=42 is required for pyproject.toml configuration support
+[0.479s] 
+[0.479s] Suggested workarounds if applicable:
+[0.480s]  - preinstalling build dependencies like setuptools_scm before running setup.py
+[0.480s]  - installing setuptools_scm using the system package manager to ensure consistency
+[0.480s]  - migrating from the deprecated setup_requires mechanism to pep517/518
+[0.480s]    and using a pyproject.toml to declare build dependencies
+[0.480s]    which are reliably pre-installed before running the build tools
+[0.480s] 
+[0.480s]   warnings.warn(
+[0.486s] running egg_info
+[0.486s] writing ../../build/depth_subscriber/depth_subscriber.egg-info/PKG-INFO
+[0.486s] writing dependency_links to ../../build/depth_subscriber/depth_subscriber.egg-info/dependency_links.txt
+[0.487s] writing entry points to ../../build/depth_subscriber/depth_subscriber.egg-info/entry_points.txt
+[0.487s] writing requirements to ../../build/depth_subscriber/depth_subscriber.egg-info/requires.txt
+[0.487s] writing top-level names to ../../build/depth_subscriber/depth_subscriber.egg-info/top_level.txt
+[0.571s] listing git files failed - pretending there aren't any
+[0.572s] reading manifest file '../../build/depth_subscriber/depth_subscriber.egg-info/SOURCES.txt'
+[0.573s] writing manifest file '../../build/depth_subscriber/depth_subscriber.egg-info/SOURCES.txt'
+[0.573s] running build
+[0.573s] running build_py
+[0.573s] running install
+[0.574s] running install_lib
+[0.576s] running install_data
+[0.576s] running install_egg_info
+[0.577s] removing '/data/drame/openpifpaf1.3/openpifpaf/install/depth_subscriber/lib/python3.8/site-packages/depth_subscriber-0.0.0-py3.8.egg-info' (and everything under it)
+[0.577s] Copying ../../build/depth_subscriber/depth_subscriber.egg-info to /data/drame/openpifpaf1.3/openpifpaf/install/depth_subscriber/lib/python3.8/site-packages/depth_subscriber-0.0.0-py3.8.egg-info
+[0.577s] running install_scripts
+[0.590s] Installing listener script to /data/drame/openpifpaf1.3/openpifpaf/install/depth_subscriber/lib/depth_subscriber
+[0.591s] writing list of installed files to '/data/drame/openpifpaf1.3/openpifpaf/build/depth_subscriber/install.log'
+[0.613s] Invoked command in '/data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber' returned '0': PS1=(VENV_open) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/data/drame/openpifpaf1.3/openpifpaf/install/depth_subscriber/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/depth_subscriber build --build-base /data/drame/openpifpaf1.3/openpifpaf/build/depth_subscriber/build install --prefix /data/drame/openpifpaf1.3/openpifpaf/install/depth_subscriber --record /data/drame/openpifpaf1.3/openpifpaf/build/depth_subscriber/install.log --single-version-externally-managed

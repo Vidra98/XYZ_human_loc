@@ -1,0 +1,14 @@
+running develop
+running egg_info
+writing depth_subscriber.egg-info/PKG-INFO
+writing dependency_links to depth_subscriber.egg-info/dependency_links.txt
+writing entry points to depth_subscriber.egg-info/entry_points.txt
+writing requirements to depth_subscriber.egg-info/requires.txt
+writing top-level names to depth_subscriber.egg-info/top_level.txt
+writing manifest file 'depth_subscriber.egg-info/SOURCES.txt'
+running build_ext
+Creating /data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber/lib/python3.8/site-packages/depth-subscriber.egg-link (link to .)
+Installing listener script to /data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/install/depth_subscriber/lib/depth_subscriber
+
+Installed /data/drame/openpifpaf1.3/openpifpaf/ROS2/depth_subscriber/build/depth_subscriber
+running install_data
