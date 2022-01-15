@@ -6,11 +6,6 @@ from std_msgs.msg import *
 from sensor_msgs.msg import * 
 import numpy as np
 import message_filters
-#create cloud libraries 
-from collections import namedtuple
-import ctypes
-#import math
-import struct
 
 import argparse 
 import json
@@ -28,13 +23,8 @@ from openpifpaf.predictor import Predictor
 from openpifpaf.stream import Stream
 
 from depth.mannequin.options.train_options import TrainOptions
-from depth.mannequin.loaders import aligned_data_loader
 from depth.mannequin.models import pix2pix_model
-import torch.autograd as autograd
-from skimage import transform
 import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
 
 from torchvision.transforms import Compose
 
@@ -45,7 +35,6 @@ from depth.midas.midas.midas_net_custom import MidasNet_small
 from depth.midas.midas.transforms import Resize, NormalizeImage, PrepareForNet
 
 import open3d as o3d
-import pyrealsense2 as rs
 
 
 # The data structure of each point in ros PointCloud2: 16 bits = x + y + z + rgb
@@ -129,9 +118,6 @@ class D430i_suscriber(Node):
 
         self.clock = rclpy.clock.Clock()
 
-
-        
-        #self.vis.add_geometry(self.pcd)
         self.vis=vis
 
         self.args=args
@@ -146,11 +132,6 @@ class D430i_suscriber(Node):
         torch.cuda.empty_cache()
         color_plt = np.frombuffer(color_msg.data, dtype=np.uint8).reshape(color_msg.height, color_msg.width, -1)
         depth_plt = np.frombuffer(depth_msg.data, dtype=np.uint16).reshape(depth_msg.height, depth_msg.width, -1)
-        # fig, ax = plt.subplots()
-        # im = ax.imshow(depth_plt[:,:,0], cmap='gray')
-        # fig2, ax2 = plt.subplots()
-        # im2 = ax2.imshow(color_plt)
-        # plt.show()
         start_callback = time.perf_counter()
         
         image, processed_image, anns, meta = self.capture.preprocessing(torch.tensor(color_plt))
@@ -300,35 +281,13 @@ class D430i_suscriber(Node):
             
             R,T=rigid_transform_3D(np.array(Torso_coordinate.transpose()[[0,2]]),new_coordinate)
 
-            #print('cartesian_pred\n',cartesian_pred,'\n--------------------------')
-            print('Torso_centered_xz\n',Torso_centered_xz)
-            print('Torso_variance_xz\n\n',Torso_variance_xz,'\nlen torso coord\n\n',len(Torso_coordinate))
-            print('eigen_value\n\n',eigen_value,'\neigenvector\n\n',eigenvector)
-            # print('new coord xzy - y pos\n\n', np.concatenate((np.dot(eigenvector,Torso_centered_xz.transpose()),np.array([(Torso_coordinate[:,1]-Torso_centroid[1])]) ),axis=0))
-            # print('new coord xzy\n', np.concatenate((np.dot(eigenvector,Torso_centered_xz.transpose()),np.array([-(Torso_coordinate[:,1]-Torso_centroid[1])]) ),axis=0))
-            print('new_coordinate\n',new_coordinate)
-            print(np.shape(Torso_coordinate),np.shape(new_coordinate))           
-            print('Rotation : \n',R,'\n Translation : \n',T)
             R_tmp=np.zeros((3,3))
             R_tmp[tuple([[0,0,2,2],[0,2,0,2]])]=np.reshape(R,(1,4))
             R_tmp[1,1]=-1
             R=R_tmp
             T=np.array([[T.item(0)],[Torso_centroid[1]],[T.item(1)]])
-            print('Rotation : \n',R,'\nTranslation : \n',T,'\ntorso centroid\n',Torso_centroid)
-            # print('Projection\n',R@Torso_coordinate.transpose()+T)
-            # print('Projection referentiel\n',R@np.eye(3).transpose())
 
-            # print('Error :' ,(R@Torso_coordinate.transpose()+T)-(new_coordinate))
-            # print('cart_pred reproj',R@cartesian_pred+T)
-
-            #Reproject the whole body on the torso frame
-            # print('no translation',R@cartesian_pred)
-            # print('\n translation of ',T,' ---> \n',R@cartesian_pred+T)
-            #cartesian_pred=R@cartesian_pred+T
             cartesian_pred=R@(cartesian_pred-np.array([[Torso_centroid[0]],[Torso_centroid[1]],[Torso_centroid[2]]]))
-            print('Torso_coordinate\n\n',Torso_coordinate,'\nTorso_centered_xz\n',Torso_centered_xz,'\nTorso_centroid\n\n',Torso_centroid)
-
-            print('projected torso coordinate',np.array([cartesian_pred[0,:,left_shoulder],cartesian_pred[0,:,right_shoulder],cartesian_pred[0,:,left_hip],cartesian_pred[0,:,right_hip]]))
 
         if self.args.plot_skeleton  :
             if self.args.plot_real_time:
@@ -374,7 +333,7 @@ class D430i_suscriber(Node):
 
         color_img=o3d.geometry.Image(color_plt)
         depth_img=o3d.geometry.Image(np.copy(depth_map*1000).astype(np.uint16))
-        rgbd_image=o3d.geometry.RGBDImage.create_from_color_and_depth(color_img,depth_img,depth_scale=1000,depth_trunc=5,convert_rgb_to_intensity=False)
+        rgbd_image=o3d.geometry.RGBDImage.create_from_color_and_depth(color_img,depth_img,depth_scale=1000,depth_trunc=8,convert_rgb_to_intensity=False)
 
         self.pcd = o3d.geometry.PointCloud.create_from_rgbd_image(rgbd_image,o3d.camera.PinholeCameraIntrinsic(width,heigth,fx,fy,cx,cy))
         # flip it, otherwise the pointcloud will be upside down
@@ -398,11 +357,7 @@ class D430i_suscriber(Node):
             ctr.set_lookat(np.array( [ 1.2204758770112838, 1.1086807226732882, 2.6767072071018365 ]) )
             ctr.set_zoom(0.5)
             vis.run()
-            # #mesh_RT = o3d.geometry.TriangleMesh.create_coordinate_frame().rotate((R), center=(1,1,1))
-            # #mesh_RT.translate(-T, relative=True)#, center=(T[0],T[1],T[2]))
-            #o3d.visualization.draw_geometries([mesh,self.pcd])
 
-            print('plotting is commented eheh')
         elif self.args.plot_real_time and self.args.plot_pointcloud :
             #Since update geometry doesn't works in our case we use a roundaround way to avoid the issue, subtoptimal.
             # self.vis.update_geometry(self.pcd)
@@ -441,10 +396,6 @@ class D430i_suscriber(Node):
             pcd_to_publish=create_cloud(header, fields, cloud_data.astype(int))
             
             self.publisher.callback(pcd_to_publish)
-        """fig, ax = plt.subplots()
-        im = ax.imshow(depth_map, cmap='gray')
-        plt.show()"""
-
         return
 
 def main(args=None):
@@ -490,9 +441,6 @@ def main(args=None):
     publisher=D430i_publisher()
     minimal_subscriber = D430i_suscriber(args,predictor,capture,depth_model,transform,publisher,vis)
     rclpy.spin(minimal_subscriber)
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
     minimal_subscriber.destroy_node()
     rclpy.shutdown()
 
@@ -810,7 +758,8 @@ def depth_mapping(model,transformation,frame,args):
         frame=torch.tensor(frame)
 
         frame = np.float32(frame)/255.0
-        frame = transform.resize(frame, (width_depthmap,height_depthmap))
+        frame = cv2.resize(frame, (width_depthmap,height_depthmap))
+
         frame=torch.tensor(frame)
 
         frame=torch.transpose(frame,0,2)

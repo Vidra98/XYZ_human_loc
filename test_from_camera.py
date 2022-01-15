@@ -1,19 +1,8 @@
 from numpy.core.numeric import NaN
-import rclpy
-from rclpy.node import Node
 import matplotlib.pyplot as plt
-from std_msgs.msg import * 
-from sensor_msgs.msg import * 
 import numpy as np
-import message_filters
-#create cloud libraries 
-from collections import namedtuple
-import ctypes
-#import math
-import struct
 
 import argparse 
-import json
 import logging
 import os
 import time
@@ -28,13 +17,7 @@ from openpifpaf.predictor import Predictor
 from openpifpaf.stream import Stream
 
 from depth.mannequin.options.train_options import TrainOptions
-from depth.mannequin.loaders import aligned_data_loader
 from depth.mannequin.models import pix2pix_model
-import torch.autograd as autograd
-from skimage import transform
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
 
 from torchvision.transforms import Compose
 
@@ -131,7 +114,6 @@ class DepthCamera:
 
 
 def main(args=None):
-    rclpy.init(args=args)
     torch.cuda.empty_cache()
     args = cli()
     args.checkpoint='mobilenetv2'
@@ -475,8 +457,6 @@ def main(args=None):
                         mesh.rotate(R,center=(0, 0, 0))
                         mesh.translate(Torso_centroid,relative=True)
             
-            
-
             if args.plot_real_time==True:
 
                 #Visualize Point Cloud
@@ -531,34 +511,6 @@ def main(args=None):
         print('Plotting time', int((plot_computing_time)*1000),'ms thus ',1/(plot_computing_time),'fps/Hz')
         print('Depth time', int((depth_computing_time)*1000),'ms thus ',1/(depth_computing_time),'fps/Hz')
         print('-----------------------------------------------------------------------------')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-_DATATYPES = {}
-_DATATYPES[PointField.INT8]    = ('b', 1)
-_DATATYPES[PointField.UINT8]   = ('B', 1)
-_DATATYPES[PointField.INT16]   = ('h', 2)
-_DATATYPES[PointField.UINT16]  = ('H', 2)
-_DATATYPES[PointField.INT32]   = ('i', 4)
-_DATATYPES[PointField.UINT32]  = ('I', 4)
-_DATATYPES[PointField.FLOAT32] = ('f', 4)
-_DATATYPES[PointField.FLOAT64] = ('d', 8)
-
 
 def rigid_transform_3D(A, B):
     """
@@ -812,7 +764,8 @@ def depth_mapping(model,transformation,frame,args):
         frame=torch.tensor(frame)
 
         frame = np.float32(frame)/255.0
-        frame = transform.resize(frame, (width_depthmap,height_depthmap))
+        frame = cv2.resize(frame, (width_depthmap,height_depthmap))
+
         frame=torch.tensor(frame)
 
         frame=torch.transpose(frame,0,2)

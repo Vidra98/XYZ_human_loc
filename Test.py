@@ -17,7 +17,6 @@ Trouble shooting:
 * MacOSX: try to prefix the command with "MPLBACKEND=MACOSX".
 """
 
-
 import argparse 
 import json
 import logging
@@ -36,10 +35,7 @@ from depth.mannequin.models import pix2pix_model
 import cv2
 import numpy as np
 import torch.autograd as autograd
-from skimage import transform
 import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
 
 from torchvision.transforms import Compose
 
@@ -223,12 +219,7 @@ def get_depth_model(args):
 
         model.eval()
         
-        if args.optimize==True:
-            # rand_example = torch.rand(1, 3, net_h, net_w)
-            # model(rand_example)
-            # traced_script_module = torch.jit.trace(model, rand_example)
-            # model = traced_script_module
-        
+        if args.optimize==True:        
             if device == torch.device("cuda"):
                 model = model.to(memory_format=torch.channels_last)  
                 model = model.half()
@@ -241,7 +232,6 @@ def get_depth_model(args):
 def depth_mapping(model,transformation,frame,args):
     input_height,input_width,_=np.shape(frame)   
 
-    
     if args.depth_model=='mannequin':
 
         height_depthmap = 288
@@ -251,7 +241,7 @@ def depth_mapping(model,transformation,frame,args):
         frame=torch.tensor(frame)
 
         frame = np.float32(frame)/255.0
-        frame = transform.resize(frame, (width_depthmap,height_depthmap))
+        frame = cv2.resize(frame, (width_depthmap,height_depthmap))
         frame=torch.tensor(frame)
 
         frame=torch.transpose(frame,0,2)
@@ -278,23 +268,14 @@ def depth_mapping(model,transformation,frame,args):
         pred_d=pred_d.detach().numpy()
         pred_d = cv2.resize(pred_d, (input_width,input_height))
         disparity = cv2.resize(disparity, (input_width,input_height))
-        # fig, ax = plt.subplots()
-        # im = ax.imshow(disparity, cmap='gray', vmin=0, vmax=255)
-        # plt.show()
-
     elif args.depth_model=='midas':
         # input
         start=time.perf_counter()
         if frame.ndim == 2:
             print('frame.ndim == 2')
             frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
-        
-
         frame = frame / 255.0
-        # fig, ax = plt.subplots()
-        # im = ax.imshow(frame)
-        # plt.show()
-
+    
         img_input = transformation({"image": frame})["image"]
         # compute
         with torch.no_grad():
@@ -315,8 +296,6 @@ def depth_mapping(model,transformation,frame,args):
                 .numpy().astype(np.float32)
             )
         end=time.perf_counter()
-        depth_max=np.max(disparity)
-        depth_min=np.min(disparity)
 
         disparity[disparity<0.001]=0.001
         pred_d = 1. / disparity
@@ -328,11 +307,7 @@ def depth_mapping(model,transformation,frame,args):
         disparity = (disparity*255).astype(np.uint8)
 
         pred_d = cv2.resize(pred_d, (input_width,input_height))
-        disparity = cv2.resize(disparity, (input_width,input_height))
-        # fig, ax = plt.subplots()
-        # im = ax.imshow(pred_d, cmap='gray', vmin=0, vmax=255)
-        # plt.show()
-        
+        disparity = cv2.resize(disparity, (input_width,input_height))      
     else:
         print('Wrong depth model name, try : [mannequin|midas]')
 
@@ -359,7 +334,7 @@ def main():
     #We need the GT either for outputting a GT map or a doing the shifting and scaling
     if args.GT_depth_file is not None or args.shift_scale is True:
         print('Loading ground truth for the scene')
-        frame_idx=1.0                                                           #frame idx of the ground truth set to 1 in general
+        frame_idx=1.0                                                        
         f = open(args.GT_depth_file,)
         depth_GT = json.load(f)
         print('Loading completed')
@@ -376,7 +351,6 @@ def main():
             ax, ax_second = animation.frame_init(image)
         
         keypoints=[ann.json_data()['keypoints'] for ann in preds]
-        #print('kp',keypoints)
         #In midas and mannequin papers, they compute their metrics over scale invariant depth map and GT
         #Here's a reproduction of their approach on eq(6) of midas
         if args.normalize_pred==True:
@@ -485,17 +459,13 @@ def main():
 
         depth_pred=np.zeros((len(preds),17))
         for idx,keypoints_single in enumerate(preds_indice) :
-            depth_pred[idx]=depth_map[tuple((keypoints_single[:,[0,1]]-1).transpose().tolist())]
-            #nb_predictions+=1
-            #depth_map[tuple(keypoints_single[:,[0,1]].transpose().tolist())]=1
-
-
-        
+            depth_pred[idx]=depth_map[tuple((keypoints_single[:,[0,1]]-1).transpose().tolist())]     
 
         #if the keypoints is not found, put depth value to nan
         depth_pred[keypoint_confidence<=0.4]='nan'
-        #ax.imshow(disparity)
-        ax.imshow(image)
+        #This is the image return as output [disparity for depth, image for rgb input]
+        ax.imshow(disparity)
+        #ax.imshow(image)
         visualizer.Base.common_ax = ax_second if args.separate_debug_ax else ax
 
         start_post = time.perf_counter()
@@ -510,7 +480,7 @@ def main():
         if (not args.json_output or args.video_output) \
            and (args.separate_debug_ax or not args.debug_indices):
             depth_text=np.nanmean(depth_pred,axis=1)
-            annotation_painter.annotations(ax, preds)#,texts=depth_text)
+            annotation_painter.annotations(ax, preds,texts=depth_text)
 
         postprocessing_time = time.perf_counter() - start_post
         if animation.last_draw_time is not None:
@@ -527,7 +497,5 @@ def main():
                  
         last_loop = time.perf_counter()
 
-#meta['preprocessing_s'] * 1000.0,
-#postprocessing_time * 1000.0,
 if __name__ == '__main__':
     main()
