@@ -1,101 +1,132 @@
-# openpifpaf
+TrajNet++ : The Trajectory Forecasting Framework
+================================================
 
-Continuously tested on Linux, MacOS and Windows:
-[![Tests](https://github.com/openpifpaf/openpifpaf/workflows/Tests/badge.svg?branch=main)](https://github.com/openpifpaf/openpifpaf/actions?query=workflow%3ATests)
-[![deploy-guide](https://github.com/openpifpaf/openpifpaf/workflows/deploy-guide/badge.svg)](https://github.com/openpifpaf/openpifpaf/actions?query=workflow%3Adeploy-guide)
-[![Downloads](https://pepy.tech/badge/openpifpaf)](https://pepy.tech/project/openpifpaf)
-<br />
-[__New__ 2021 paper](https://arxiv.org/abs/2103.02440):
+PyTorch implementation of `Human Trajectory Forecasting in Crowds: A Deep Learning Perspective <https://arxiv.org/pdf/2007.03639.pdf>`_ 
 
-> __OpenPifPaf: Composite Fields for Semantic Keypoint Detection and Spatio-Temporal Association__<br />
-> _[Sven Kreiss](https://www.svenkreiss.com), [Lorenzo Bertoni](https://scholar.google.com/citations?user=f-4YHeMAAAAJ&hl=en), [Alexandre Alahi](https://scholar.google.com/citations?user=UIhXQ64AAAAJ&hl=en)_, 2021.
->
-> Many image-based perception tasks can be formulated as detecting, associating
-> and tracking semantic keypoints, e.g., human body pose estimation and tracking.
-> In this work, we present a general framework that jointly detects and forms
-> spatio-temporal keypoint associations in a single stage, making this the first
-> real-time pose detection and tracking algorithm. We present a generic neural
-> network architecture that uses Composite Fields to detect and construct a
-> spatio-temporal pose which is a single, connected graph whose nodes are the
-> semantic keypoints (e.g., a person's body joints) in multiple frames. For the
-> temporal associations, we introduce the Temporal Composite Association Field
-> (TCAF) which requires an extended network architecture and training method
-> beyond previous Composite Fields. Our experiments show competitive accuracy
-> while being an order of magnitude faster on multiple publicly available datasets
-> such as COCO, CrowdPose and the PoseTrack 2017 and 2018 datasets. We also show
-> that our method generalizes to any class of semantic keypoints such as car and
-> animal parts to provide a holistic perception framework that is well suited for
-> urban mobility such as self-driving cars and delivery robots.
+.. figure:: docs/train/cover.png
 
-Previous [CVPR 2019 paper](http://openaccess.thecvf.com/content_CVPR_2019/html/Kreiss_PifPaf_Composite_Fields_for_Human_Pose_Estimation_CVPR_2019_paper.html).
+TrajNet++ is a large scale interaction-centric trajectory forecasting benchmark comprising explicit agent-agent scenarios. Our framework provides proper indexing of trajectories by defining a hierarchy of trajectory categorization. In addition, we provide an extensive evaluation system to test the gathered methods for a fair comparison. In our evaluation, we go beyond the standard distance-based metrics and introduce novel metrics that measure the capability of a model to emulate pedestrian behavior in crowds. Finally, we provide code implementations of > 10 popular human trajectory forecasting baselines.
 
 
-# [Guide](https://openpifpaf.github.io/intro.html)
+Data Setup
+==========
 
-Detailed documentation is in our __[OpenPifPaf Guide](https://openpifpaf.github.io/intro.html)__.
-For developers, there is also the
-__[DEV Guide](https://openpifpaf.github.io/dev/intro.html)__
-which is the same guide but based on the latest code in the `main` branch.
+The detailed step-by-step procedure for setting up the TrajNet++ framework can be found `here <https://thedebugger811.github.io/posts/2020/03/intro_trajnetpp/>`_
+
+Converting External Datasets
+----------------------------
+
+To convert external datasets into the TrajNet++ framework, refer to this `guide <https://thedebugger811.github.io/posts/2020/10/data_conversion/>`_ 
+
+Training Models
+===============
+
+LSTM
+----
+
+The training script and its help menu:
+``python -m trajnetbaselines.lstm.trainer --help``
+
+**Run Example**
+
+.. code-block::
+
+   ## Our Proposed D-LSTM
+   python -m trajnetbaselines.lstm.trainer --type directional --augment
+
+   ## Social LSTM 
+   python -m trajnetbaselines.lstm.trainer --type social --augment --n 16 --embedding_arch two_layer --layer_dims 1024
 
 
-# Examples
 
-![example image with overlaid pose predictions](https://github.com/openpifpaf/openpifpaf/raw/main/docs/coco/000000081988.jpg.predictions.jpeg)
-
-Image credit: "[Learning to surf](https://www.flickr.com/photos/fotologic/6038911779/in/photostream/)" by fotologic which is licensed under [CC-BY-2.0].<br />
-Created with:
-```sh
-pip3 install matplotlib openpifpaf
-python3 -m openpifpaf.predict docs/coco/000000081988.jpg --image-output
-```
-
+GAN
 ---
 
-Here is the [tutorial for body, foot, face and hand keypoints](https://openpifpaf.github.io/plugins_wholebody.html). Example:
-![example image with overlaid wholebody pose predictions](https://raw.githubusercontent.com/openpifpaf/openpifpaf/main/docs/soccer.jpeg.predictions.jpeg)
+The training script and its help menu:
+``python -m trajnetbaselines.sgan.trainer --help``
 
-Image credit: [Photo](https://de.wikipedia.org/wiki/Kamil_Vacek#/media/Datei:Kamil_Vacek_20200627.jpg) by [Lokomotive74](https://commons.wikimedia.org/wiki/User:Lokomotive74) which is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).<br />
-Created with:
-```sh
-python -m openpifpaf.predict guide/wholebody/soccer.jpeg \
-  --checkpoint=shufflenetv2k30-wholebody --line-width=2 --image-output
-```
+**Run Example**
 
----
+.. code-block::
 
-Here is the [tutorial for car keypoints](https://openpifpaf.github.io/plugins_apollocar3d.html). Example:
-![example image cars](https://raw.githubusercontent.com/openpifpaf/openpifpaf/main/docs/peterbourg.jpg.predictions.jpeg)
-
-Image credit: [Photo](https://commons.wikimedia.org/wiki/File:Streets_of_Saint_Petersburg,_Russia.jpg) by [Ninaras](https://commons.wikimedia.org/wiki/User:Ninaras) which is licensed under [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
-
-Created with:
-```sh
-python -m openpifpaf.predict guide/images/peterbourg.jpg \
-  --checkpoint shufflenetv2k16-apollo-24 -o images \
-  --instance-threshold 0.05 --seed-threshold 0.05 \
-  --line-width 4 --font-size 0
-```
-
----
-
-Here is the [tutorial for animal keypoints (dogs, cats, sheep, horses and cows)](https://openpifpaf.github.io/plugins_animalpose.html). Example:
-![example image cars](https://raw.githubusercontent.com/openpifpaf/openpifpaf/main/docs/tappo_loomo.jpg.predictions.jpeg)
+   ## Social GAN (L2 Loss + Adversarial Loss)
+   python -m trajnetbaselines.sgan.trainer --type directional --augment
+   
+   ## Social GAN (Variety Loss only)
+   python -m trajnetbaselines.sgan.trainer --type directional --augment --d_steps 0 --k 3
 
 
-```sh
-python -m openpifpaf.predict guide/images tappo_loomo.jpg \
-  --checkpoint=shufflenetv2k30-animalpose \
-  --line-width=6 --font-size=6 --white-overlay=0.3 \
-  --long-edge=500
-```
+Evaluation
+==========
+
+The evaluation script and its help menu: ``python -m evaluator.trajnet_evaluator --help``
+
+**Run Example**
+
+.. code-block::
+
+   ## TrajNet++ evaluator (saves model predictions. Useful for submission to TrajNet++ benchmark)
+   python -m evaluator.trajnet_evaluator --output OUTPUT_BLOCK/trajdata/lstm_directional_None.pkl --path <path_to_test_file>
+   
+   ## Fast Evaluator (does not save model predictions)
+   python -m evaluator.fast_evaluator --output OUTPUT_BLOCK/trajdata/lstm_directional_None.pkl --path <path_to_test_file>
+
+More details regarding TrajNet++ evaluator are provided `here <https://github.com/vita-epfl/trajnetplusplusbaselines/blob/master/evaluator/README.rst>`_
+
+Evaluation on datasplits is based on the following `categorization <https://github.com/vita-epfl/trajnetplusplusbaselines/blob/master/docs/train/Categorize.png>`_
 
 
-# Commercial License
+Results
+-------
 
-The open source license is in the [LICENSE](https://github.com/openpifpaf/openpifpaf/blob/main/LICENSE) file.
-This software is also available for licensing via the EPFL Technology Transfer
-Office (https://tto.epfl.ch/, info.tto@epfl.ch).
+Unimodal Comparison of interaction encoder designs on interacting trajectories of TrajNet++ real world dataset. Errors reported are ADE / FDE in meters, collisions in mean % (std. dev. %) across 5 independent runs. Our goal is to reduce collisions in model predictions without compromising distance-based metrics.
+
++----------------+------------+-------------------+ 
+| Method         |   ADE/FDE  | Collisions        | 
++----------------+------------+-------------------+ 
+| LSTM           |  0.60/1.30 | 13.6 (0.2)        | 
++----------------+------------+-------------------+ 
+| S-LSTM         |  0.53/1.14 |  6.7 (0.2)        |  
++----------------+------------+-------------------+ 
+| S-Attn         |  0.56/1.21 |  9.0 (0.3)        |  
++----------------+------------+-------------------+ 
+| S-GAN          |  0.64/1.40 |  6.9 (0.5)        |   
++----------------+------------+-------------------+ 
+| D-LSTM (ours)  |  0.56/1.22 |  **5.4** **(0.3)**| 
++----------------+------------+-------------------+ 
 
 
-[CC-BY-2.0]: https://creativecommons.org/licenses/by/2.0/
+Interpreting Forecasting Models
+===============================
+
++-------------------------------------------------------------------------+
+|  .. figure:: docs/train/LRP.gif                                         |
+|                                                                         |
+|     Visualizations of the decision-making of social interaction modules |
+|     using layer-wise relevance propagation (LRP). The darker the yellow |
+|     circles, the more is the weight provided by the primary pedestrian  |
+|     (blue) to the corresponding neighbour (yellow).                     |
++-------------------------------------------------------------------------+
+
+Code implementation for explaining trajectory forecasting models using LRP can be found `here <https://github.com/vita-epfl/trajnetplusplusbaselines/tree/LRP>`_
+
+Benchmarking Models
+===================
+
+We host the `Trajnet++ Challenge <https://www.aicrowd.com/challenges/trajnet-a-trajectory-forecasting-challenge>`_ on AICrowd allowing researchers to objectively evaluate and benchmark trajectory forecasting models on interaction-centric data. We rely on the spirit of crowdsourcing, and encourage researchers to submit their sequences to our benchmark, so the quality of trajectory forecasting models can keep increasing in tackling more challenging scenarios.
+
+Citation
+========
+
+If you find this code useful in your research then please cite
+
+.. code-block::
+
+    @article{Kothari2020HumanTF,
+      title={Human Trajectory Forecasting in Crowds: A Deep Learning Perspective},
+      author={Parth Kothari and S. Kreiss and Alexandre Alahi},
+      journal={ArXiv},
+      year={2020},
+      volume={abs/2007.03639}
+    }
 

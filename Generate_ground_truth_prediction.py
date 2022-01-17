@@ -1,23 +1,3 @@
-"""Video demo application.
-
-Use --scale=0.2 to reduce the input image size to 20%.
-Use --json-output for headless processing.
-
-Example commands:
-    python3 -m pifpaf.video --source=0  # default webcam
-    python3 -m pifpaf.video --source=1  # another webcam
-
-    # streaming source
-    python3 -m pifpaf.video --source=http://127.0.0.1:8080/video
-
-    # file system source (any valid OpenCV source)
-    python3 -m pifpaf.video --source=docs/coco/000000081988.jpg
-
-Trouble shooting:
-* MacOSX: try to prefix the command with "MPLBACKEND=MACOSX".
-"""
-
-
 import argparse 
 import json
 import logging

@@ -119,13 +119,13 @@ def main(args=None):
     args.checkpoint='mobilenetv2'
     args.shift_scale=True
     args.model_weigth='dpt_hybrid' # Midas model dpt_hybrid, midas_v21_large or midas_v21_small'
-    args.plot_pointcloud=True
-    args.project_pointcloud_torso_frame=True
-    args.project_in_3D=True
-    args.plot_real_time=True
+    # args.plot_pointcloud=False
+    # args.project_pointcloud_torso_frame=False
+    # args.project_in_3D=False
+    # args.plot_real_time=False
 
-    args.plot_skeleton=False
-    args.GT_from_camera=False
+    # args.plot_skeleton=False
+    # args.GT_from_camera=True
 
     #Ensure that cuda cache is not used for nothing
     torch.cuda.empty_cache()
@@ -340,9 +340,8 @@ def main(args=None):
                 R_tmp[1,1]=-1
                 R=R_tmp
                 T=np.array([[T.item(0)],[Torso_centroid[1]],[T.item(1)]])
+            cartesian_pred=R.transpose()@(cartesian_pred-np.array([[Torso_centroid[0]],[Torso_centroid[1]],[Torso_centroid[2]]]))
 
-            cartesian_pred=R.transpose()@(cartesian_pred)+T
-            
             #Plot of torso frame and camera frame
             # fig_torso_frame = plt.figure(figsize=(20.0, 10.0))
             # ax1 = fig_torso_frame.add_subplot(121,projection='3d')
@@ -611,10 +610,13 @@ def cli():  # pylint: disable=too-many-statements,too-many-branches
                         help='Plot a pointcloud in real time')
     parser.add_argument('--project-pointcloud-torso-frame', default=False, action='store_true',
                         help='Project the pointcloud in the torso frame')
+    parser.add_argument('--project-in-3D', default=False, action='store_true',
+                        help='Compute the best fitting axis in XYZ, else it keep the Y axis pointing up and optimize XZ axis')
     parser.add_argument('--plot-real-time', default=False, action='store_true',
                         help='Plot in real time')
     parser.add_argument('--plot-skeleton', default=False, action='store_true',
                         help='Plot the skeleton in xyz coordinate')
+
     parser.add_argument('--GT-from-camera', default=False, action='store_true',
                         help='Get the ground truth from the camera')
     
