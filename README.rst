@@ -10,9 +10,10 @@ The code necessary for it's generation from a D435i camera is provided in acquis
 Requirement 
 ===========
 
-```
+``
 pip install -r requirements.txt
-```
+``
+
 Command
 =======
 
@@ -22,9 +23,9 @@ An acquisition script have been created to store the mp4 video stream with the c
 
 The script is run with :
 
-```
+``
 python3 -m acquisition
-```
+``
 
 To do an acquisition please press on the 's' keyboard (for 'save')
 
@@ -32,8 +33,8 @@ From video files
 ----------------
 To run from video input, please put your input file in input and run :
 
-```
-python3 -m Test --source=input/output1 \
+``
+python3 -m Test_from_mp4 --source=input/output1 \
 --video-output=output/output.mp4 \
 --video-fps=30 \
 --json-output=output/json_output.json \
@@ -41,7 +42,7 @@ python3 -m Test --source=input/output1 \
 --model_type='dpt_hybrid' \
 --checkpoint mobilenetv2 \
 --shift-scale-from-torso \
-```
+``
 
 You can also provide a GT files path with the argument 'GT_depth_file' and decide to scale from 
 the GT with 'shift-scale'. More option are detailled in the 'help' argument.
@@ -56,17 +57,17 @@ They are some vizualisation implemented, you can acces the pointcloud view :
 
 +-------------------------------------------------------------------------+
 |  .. figure:: docs/pointcloud.png                                        |
-|```python3 -m test_from_camera --plot-pointcloud --GT-from-camera```     |
+|``python3 -m test_from_camera --plot-pointcloud --GT-from-camera``       |
 +-------------------------------------------------------------------------+
 
 +----------------------------------------------------------------------------------------------------------+
 |  .. figure:: docs/pointcloud_torso_frame.png                                                             |
-|```python3 -m test_from_camera --plot-pointcloud --GT-from-camera --project-pointcloud-torso-frame```     |
+|``python3 -m test_from_camera --plot-pointcloud --GT-from-camera --project-pointcloud-torso-frame``       |
 +----------------------------------------------------------------------------------------------------------+
 
 +-------------------------------------------------------------------------+
 |  .. figure:: docs/skeleton.png                                          |
-|```python3 -m test_from_camera --plot-skeleton --GT-from-camera```       |
+|``python3 -m test_from_camera --plot-skeleton --GT-from-camera``         |
 +-------------------------------------------------------------------------+
 
 Other parameters are available and accessible with the 'help' argument
@@ -74,15 +75,15 @@ Other parameters are available and accessible with the 'help' argument
 ROS2
 ====
 
-First please install .. _ROS2: https://docs.ros.org/en/foxy/Installation.html
+First please install `ROS2<https://docs.ros.org/en/foxy/Installation.html>`_
 
 Then run the following command : 
-```
+``
 cd ROS2/depth_subscriber
 colcon build --packages-select depth_subscriber
 . install/setup.bash
 ros2 run depth_subscriber listener
-```
+``
 
 This provide the same output as test_from_camera, however it run on ros2 and publish the pointcloud. Small edition of the depth_subscriber.py file could publish any wanted data. 
 However, for some still unknown reason, this files run 2~4 time slower than the 'test_from_camera.py' file so it is best using the python script
