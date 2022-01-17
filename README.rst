@@ -29,14 +29,15 @@ From video files
 ----------------
 To run from video input, please put your input file in input and run :
 
-``python3 -m Test_from_mp4 --source=input/output1 \
---video-output=output/output.mp4 \
---video-fps=30 \
---json-output=output/json_output.json \
---depth_model='midas' \
---model_type='dpt_hybrid' \
---checkpoint mobilenetv2 \
---shift-scale-from-torso \``
+.. code-block::
+    python3 -m Test_from_mp4 --source=input/output1 \
+    --video-output=output/output.mp4 \
+    --video-fps=30 \
+    --json-output=output/json_output.json \
+    --depth_model='midas' \
+    --model_type='dpt_hybrid' \
+    --checkpoint mobilenetv2 \
+    --shift-scale-from-torso \
 
 You can also provide a GT files path with the argument 'GT_depth_file' and decide to scale from 
 the GT with 'shift-scale'. More option are detailled in the 'help' argument.
@@ -72,11 +73,12 @@ ROS2
 First please install `ROS2<https://docs.ros.org/en/foxy/Installation.html>`_
 
 Then run the following command : 
-
-``cd ROS2/depth_subscriber
-colcon build --packages-select depth_subscriber
-. install/setup.bash
-ros2 run depth_subscriber listener``
+.. code-block::
+    cd ROS2/depth_subscriber
+    colcon build --packages-select depth_subscriber
+    . install/setup.bash
+    ros2 run depth_subscriber listener
+    
 
 This provide the same output as test_from_camera, however it run on ros2 and publish the pointcloud. Small edition of the depth_subscriber.py file could publish any wanted data. 
 However, for some still unknown reason, this files run 2~4 time slower than the 'test_from_camera.py' file so it is best using the python script
