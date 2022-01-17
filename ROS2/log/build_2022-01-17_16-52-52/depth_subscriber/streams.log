@@ -1,0 +1,34 @@
+[0.263s] Invoking command in '/data/drame/openpifpaf1.3/openpifpaf/ROS2/build/depth_subscriber': PS1=(VENV_open) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --prefix /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber --editable --build-directory /data/drame/openpifpaf1.3/openpifpaf/ROS2/build/depth_subscriber/build --no-deps install_data --install-dir /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber
+[0.511s] running develop
+[0.511s] /data/drame/VENV_open/lib/python3.8/site-packages/setuptools/command/easy_install.py:156: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+[0.511s]   warnings.warn(
+[0.513s] /data/drame/VENV_open/lib/python3.8/site-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[0.513s]   warnings.warn(
+[0.578s] /data/drame/VENV_open/lib/python3.8/site-packages/pkg_resources/__init__.py:116: PkgResourcesDeprecationWarning: 0.23ubuntu1 is an invalid version and will not be supported in a future release
+[0.578s]   warnings.warn(
+[0.579s] /data/drame/VENV_open/lib/python3.8/site-packages/pkg_resources/__init__.py:116: PkgResourcesDeprecationWarning: 0.1.36ubuntu1 is an invalid version and will not be supported in a future release
+[0.579s]   warnings.warn(
+[0.579s] /data/drame/VENV_open/lib/python3.8/site-packages/pkg_resources/__init__.py:116: PkgResourcesDeprecationWarning: 1.13.1-unknown is an invalid version and will not be supported in a future release
+[0.579s]   warnings.warn(
+[0.694s] running egg_info
+[0.694s] creating depth_subscriber.egg-info
+[0.694s] writing depth_subscriber.egg-info/PKG-INFO
+[0.694s] writing dependency_links to depth_subscriber.egg-info/dependency_links.txt
+[0.694s] writing entry points to depth_subscriber.egg-info/entry_points.txt
+[0.694s] writing requirements to depth_subscriber.egg-info/requires.txt
+[0.695s] writing top-level names to depth_subscriber.egg-info/top_level.txt
+[0.698s] writing manifest file 'depth_subscriber.egg-info/SOURCES.txt'
+[1.839s] reading manifest file 'depth_subscriber.egg-info/SOURCES.txt'
+[1.840s] writing manifest file 'depth_subscriber.egg-info/SOURCES.txt'
+[1.875s] running build_ext
+[1.875s] Creating /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/lib/python3.8/site-packages/depth-subscriber.egg-link (link to .)
+[1.875s] Installing listener script to /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/lib/depth_subscriber
+[1.876s] 
+[1.876s] Installed /data/drame/openpifpaf1.3/openpifpaf/ROS2/build/depth_subscriber
+[1.876s] running install_data
+[1.876s] creating /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/share/ament_index
+[1.876s] creating /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/share/ament_index/resource_index
+[1.876s] creating /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/share/ament_index/resource_index/packages
+[1.876s] copying resource/depth_subscriber -> /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/share/ament_index/resource_index/packages
+[1.876s] copying package.xml -> /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/share/depth_subscriber
+[1.896s] Invoked command in '/data/drame/openpifpaf1.3/openpifpaf/ROS2/build/depth_subscriber' returned '0': PS1=(VENV_open) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --prefix /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber --editable --build-directory /data/drame/openpifpaf1.3/openpifpaf/ROS2/build/depth_subscriber/build --no-deps install_data --install-dir /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber

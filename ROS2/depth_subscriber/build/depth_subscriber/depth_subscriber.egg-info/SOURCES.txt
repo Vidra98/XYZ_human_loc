@@ -13,4 +13,9 @@ depth_subscriber.egg-info/entry_points.txt
 depth_subscriber.egg-info/requires.txt
 depth_subscriber.egg-info/top_level.txt
 depth_subscriber.egg-info/zip-safe
+depth_subscriber/__pycache__/D430i_subscriber.cpython-38.pyc
+depth_subscriber/__pycache__/__init__.cpython-38.pyc
 resource/depth_subscriber
+share/depth_subscriber/hook/pythonpath_develop.dsv
+share/depth_subscriber/hook/pythonpath_develop.ps1
+share/depth_subscriber/hook/pythonpath_develop.sh

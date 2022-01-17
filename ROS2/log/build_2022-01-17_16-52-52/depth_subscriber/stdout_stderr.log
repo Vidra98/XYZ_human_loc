@@ -1,0 +1,32 @@
+running develop
+/data/drame/VENV_open/lib/python3.8/site-packages/setuptools/command/easy_install.py:156: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+/data/drame/VENV_open/lib/python3.8/site-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+/data/drame/VENV_open/lib/python3.8/site-packages/pkg_resources/__init__.py:116: PkgResourcesDeprecationWarning: 0.23ubuntu1 is an invalid version and will not be supported in a future release
+  warnings.warn(
+/data/drame/VENV_open/lib/python3.8/site-packages/pkg_resources/__init__.py:116: PkgResourcesDeprecationWarning: 0.1.36ubuntu1 is an invalid version and will not be supported in a future release
+  warnings.warn(
+/data/drame/VENV_open/lib/python3.8/site-packages/pkg_resources/__init__.py:116: PkgResourcesDeprecationWarning: 1.13.1-unknown is an invalid version and will not be supported in a future release
+  warnings.warn(
+running egg_info
+creating depth_subscriber.egg-info
+writing depth_subscriber.egg-info/PKG-INFO
+writing dependency_links to depth_subscriber.egg-info/dependency_links.txt
+writing entry points to depth_subscriber.egg-info/entry_points.txt
+writing requirements to depth_subscriber.egg-info/requires.txt
+writing top-level names to depth_subscriber.egg-info/top_level.txt
+writing manifest file 'depth_subscriber.egg-info/SOURCES.txt'
+reading manifest file 'depth_subscriber.egg-info/SOURCES.txt'
+writing manifest file 'depth_subscriber.egg-info/SOURCES.txt'
+running build_ext
+Creating /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/lib/python3.8/site-packages/depth-subscriber.egg-link (link to .)
+Installing listener script to /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/lib/depth_subscriber
+
+Installed /data/drame/openpifpaf1.3/openpifpaf/ROS2/build/depth_subscriber
+running install_data
+creating /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/share/ament_index
+creating /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/share/ament_index/resource_index
+creating /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/share/ament_index/resource_index/packages
+copying resource/depth_subscriber -> /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/share/ament_index/resource_index/packages
+copying package.xml -> /data/drame/openpifpaf1.3/openpifpaf/ROS2/install/depth_subscriber/share/depth_subscriber

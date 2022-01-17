@@ -157,7 +157,6 @@ def main(args=None):
         start_callback = time.perf_counter()
         torch.cuda.empty_cache()
         ret, depth_plt, color_plt = dc.get_frame()
-
         color_plt[:,:,[0,1,2]]=color_plt[:,:,[2,1,0]]
 
         start_open = time.perf_counter()
@@ -214,8 +213,10 @@ def main(args=None):
             h_opt=np.dot(np.linalg.inv(np.array([[square_sum,prediction_sum],[prediction_sum,1]])),np.array([[shared_sum],[GT_sum]]))
             s=h_opt[0]
             t=h_opt[1]
-            #print('scaling and translation coef',s,t)
+            print(depth_map)
+            print('scaling and translation coef',s,t)
             depth_map=depth_map*s+t
+            print(depth_map)
             #depth_map[depth_map>10]=0        
 
         end_depthmap = time.perf_counter()
