@@ -29,7 +29,7 @@ From video files
 ----------------
 To run from video input, please put your input file in input and run :
 
-.. code-block::
+.. code-block::python
     python3 -m Test_from_mp4 --source=input/output1 \
     --video-output=output/output.mp4 \
     --video-fps=30 \
@@ -73,7 +73,8 @@ ROS2
 First please install `ROS2<https://docs.ros.org/en/foxy/Installation.html>`_
 
 Then run the following command : 
-.. code-block::
+
+.. code-block::python
     cd ROS2/depth_subscriber
     colcon build --packages-select depth_subscriber
     . install/setup.bash
