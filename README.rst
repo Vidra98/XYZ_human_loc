@@ -1,6 +1,6 @@
-
-Human localization for interaction with a mobile furniture
-==========================================================
+===========================================================
+Evaluation of monocular depth estimation for visual control
+===========================================================
 
 .. figure:: docs/project_map.png
 
@@ -38,14 +38,14 @@ To run from video input, please put your input file in input and run :
 
 .. code-block::
 
-        python3 -m Test_from_mp4 --source=input/output1 \
+        python3 -m Test_from_mp4 --source=input/output1.mp4 \
         --video-output=output/output.mp4 \
         --video-fps=30 \
         --json-output=output/json_output.json \
         --depth_model='midas' \
         --model_type='dpt_hybrid' \
         --checkpoint mobilenetv2 \
-        --shift-scale-from-torso \
+        --shift-scale-from-torso
 
 From D435i camera 
 -----------------
