@@ -12,18 +12,15 @@ Requirement
 
 ``pip3 install -r requirements.txt``
 
-Midas_small_weight_
-
-Midas_DPT_weight_
-
-Midas_V2_weight_
+If you want to use the midas as a depth depth network, you can download the weight at the following link ( Midas_small_ , Midas_DPT_ , Midas_V2_ ) and then put them in the folder `depth/midas/weigth`.
+They are the weight from the work Rantfl_ and al.
 
 Command
 =======
 
 acquisition
 -----------
-An acquisition script have been created to store the mp4 video stream with the corresponding depth map from the D435i stereo camera. It store the data in 'input' file. The depth map is stored in json files with each line being an array containing the depth map.
+An acquisition script have been created to store the mp4 video stream with the corresponding depth map from the D435i stereo camera. It store the data in `input` file. The depth map is stored in json files with each line being an array containing the depth map.
 
 The script is run with :
 
@@ -34,8 +31,8 @@ To do an acquisition please press on the 's' keyboard (for 'save')
 From video files 
 ----------------
 This files runs from video files, it will output a mp4 video providing the disparity map and keypoint location and a json text files with the keypoints and their depth for each frame.
-You can provide a GT files path with the argument 'GT_depth_file' and decide to scale from 
-the GT with 'shift-scale'. More option are detailled in the 'help' argument.
+You can provide a GT files path with the argument `--GT_depth_file` and decide to scale from 
+the GT with `--shift-scale`. More option are detailled in the `--help` argument.
 
 To run from video input, please put your input file in input and run :
 
@@ -71,7 +68,7 @@ They are some vizualisation implemented, you can acces the pointcloud view :
 |``python3 -m test_from_camera --plot-skeleton --GT-from-camera``         |
 +-------------------------------------------------------------------------+
 
-Other parameters are available and accessible with the 'help' argument
+Other parameters are available and accessible with the `--help` argument
 
 ROS2
 ====
@@ -90,7 +87,8 @@ Then run the following command :
 This provide the same output as test_from_camera, however it run on ros2 and publish the pointcloud. Small edition of the depth_subscriber.py file could publish any wanted data. 
 However, for some still unknown reason, this files run 2~4 time slower than the 'test_from_camera.py' file so it is best using the python script
 
-.. _Midas small: https://github.com/AlexeyAB/MiDaS/releases/download/midas_dpt/midas_v21_small-70d6b9c8.pt
-.. _Midas DPT: https://github.com/intel-isl/DPT/releases/download/1_0/dpt_hybrid-midas-501f0c75.pt
-.. _Midas V2: https://github.com/AlexeyAB/MiDaS/releases/download/midas_dpt/midas_v21-f6b98070.pt
+.. _Midas_small: https://github.com/AlexeyAB/MiDaS/releases/download/midas_dpt/midas_v21_small-70d6b9c8.pt
+.. _Midas_DPT: https://github.com/intel-isl/DPT/releases/download/1_0/dpt_hybrid-midas-501f0c75.pt
+.. _Midas_V2: https://github.com/AlexeyAB/MiDaS/releases/download/midas_dpt/midas_v21-f6b98070.pt
+.. _Rantfl: https://github.com/isl-org/MiDaS
 .. _ROS2: https://docs.ros.org/en/foxy/Installation.html
