@@ -35,14 +35,14 @@ To run from video input, please put your input file in input and run :
 
 .. code-block::
 
-        python3 -m Test_from_mp4 --source=input/output1 
-        --video-output=output/output.mp4 
-        --video-fps=30 
-        --json-output=output/json_output.json 
-        --depth_model='midas' 
-        --model_type='dpt_hybrid' 
-        --checkpoint mobilenetv2 
-        --shift-scale-from-torso 
+        python3 -m Test_from_mp4 --source=input/output1 \
+        --video-output=output/output.mp4 \
+        --video-fps=30 \
+        --json-output=output/json_output.json \
+        --depth_model='midas' \
+        --model_type='dpt_hybrid' \
+        --checkpoint mobilenetv2 \
+        --shift-scale-from-torso \
 
 From D435i camera 
 -----------------
