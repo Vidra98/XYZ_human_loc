@@ -10,8 +10,11 @@ The code necessary for it's generation from a D435i camera is provided in acquis
 Requirement 
 ===========
 
-``pip install -r requirements.txt``
+``pip3 install -r requirements.txt``
 
+Midas_small_weight_
+Midas_DPT_weight_
+Midas_V2_weight_
 Command
 =======
 
@@ -70,7 +73,7 @@ Other parameters are available and accessible with the 'help' argument
 ROS2
 ====
 
-First please install `ROS2<https://docs.ros.org/en/foxy/Installation.html>`_
+First please install ROS2_
 
 Then run the following command : 
 
@@ -83,3 +86,8 @@ Then run the following command :
 
 This provide the same output as test_from_camera, however it run on ros2 and publish the pointcloud. Small edition of the depth_subscriber.py file could publish any wanted data. 
 However, for some still unknown reason, this files run 2~4 time slower than the 'test_from_camera.py' file so it is best using the python script
+
+.. _Midas_small_weight: https://github.com/AlexeyAB/MiDaS/releases/download/midas_dpt/midas_v21_small-70d6b9c8.pt
+.. _Midas_DPT_weight: https://github.com/intel-isl/DPT/releases/download/1_0/dpt_hybrid-midas-501f0c75.pt
+.. _Midas_V2_weight: https://github.com/AlexeyAB/MiDaS/releases/download/midas_dpt/midas_v21-f6b98070.pt
+.. _ROS2: https://docs.ros.org/en/foxy/Installation.html

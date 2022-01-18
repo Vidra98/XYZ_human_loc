@@ -1,2 +1,4 @@
 depth/midas/weights/*.pt
 Frame_fig
+input/*.json
+input/*.mp4
