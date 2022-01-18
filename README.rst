@@ -1,11 +1,36 @@
-===========================================================
-Evaluation of monocular depth estimation for visual control
-===========================================================
+===============================================================
+Evaluation of monocular depth estimation for human localization
+===============================================================
 
 .. figure:: docs/project_map.png
 
 This works takes as input a video/image and provide as output a json file with position in pixels and relative/absolute depth depending on the scaling mode selected. Depending on the scaling mode, ground truth may be necessary. The ground truth can be given in a json files containing one depth image array per line. 
 The code necessary for it's generation from a D435i camera is provided in acquisition section.
+
+Repository structure
+====================
+
+.. code-block:: raw
+   
+   ├── depth # Folder containing the monocular depth model
+   │   ├── mannequin
+   │   └── midas
+   │       └── weight #Folder where to put the weight downloaded
+   ├── docs  # Folder containing the images for the github
+   ├── input # Folder where to store the input for the script. Folder where acquisition store data
+   ├── metrics # Data of metrics evaluated over Midas with the different approaches
+   ├── output   # Folder where the output data will be stored
+   ├── ROS2     # ROS2 folder
+   |    └── depth_subscriber
+   |            └── D430i_subscriber.py # Script ran by the the ROS2 command
+   ├── metrics.ipynb    # Notebook containing visualization for the different metrics
+   ├── acquisition.py   # Script running the acquisition on the D435i camera
+   ├── test_from_camera.py      # Script for doing localization over d435i camera
+   ├── Test_from_mp4.py # Script for doing localization over mp4 video in input folder
+   ├── test_matlab.py
+   ├── .gitignore
+   ├── README.rst
+   └── requirements.txt
 
 Requirement 
 ===========
