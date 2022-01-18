@@ -12,7 +12,8 @@ Repository structure
 
 .. code-block:: raw
    
-   ├── depth # Folder containing the monocular depth model
+   ├── Report # Report submitted as assignement
+   ├── depth  # Folder containing the monocular depth model
    │   ├── mannequin
    │   └── midas
    │       └── weight #Folder where to put the weight downloaded
@@ -68,7 +69,7 @@ To run from video input, please put your input file in input and run :
         --video-fps=30 \
         --json-output=output/json_output.json \
         --depth_model='midas' \
-        --model_type='dpt_hybrid' \
+        --model_type='midas_v21_small' \
         --checkpoint mobilenetv2 \
         --shift-scale-from-torso
 
