@@ -34,6 +34,7 @@ the GT with 'shift-scale'. More option are detailled in the 'help' argument.
 To run from video input, please put your input file in input and run :
 
 .. code-block::
+
         python3 -m Test_from_mp4 --source=input/output1 
         --video-output=output/output.mp4 
         --video-fps=30 
@@ -74,6 +75,7 @@ First please install `ROS2<https://docs.ros.org/en/foxy/Installation.html>`_
 Then run the following command : 
 
 .. code-block::
+
         cd ROS2/depth_subscriber  
         colcon build --packages-select depth_subscriber  
         . install/setup.bash  
